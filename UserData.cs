@@ -20,5 +20,6 @@ namespace WizzyLiConsoleApp
         public bool is_verified { get; set; }
         public DateTime user_created_at { get; set; }
         public DateTime? user_updated_at { get; set; }
+        public int user_role { get; set; }
     }
 }

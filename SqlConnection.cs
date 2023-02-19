@@ -26,8 +26,8 @@ namespace WizzyLiConsoleApp
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
-                string sql = "INSERT INTO budget_users (username, user_email, user_password, first_name, last_name, date_of_birth, user_address, user_phone, is_verified) " +
-                                "VALUES (@username, @user_email, @user_password, @first_name, @last_name, @date_of_birth, @user_address, @user_phone, @is_verified)";
+                string sql = "INSERT INTO budget_users (username, user_email, user_password, first_name, last_name, date_of_birth, user_address, user_phone, is_verified, user_role) " +
+                                "VALUES (@username, @user_email, @user_password, @first_name, @last_name, @date_of_birth, @user_address, @user_phone, @is_verified, @user_role)";
                 try
                 {
 
@@ -87,7 +87,7 @@ namespace WizzyLiConsoleApp
                 connection.Open();
                 string sql = "UPDATE budget_users SET username = @username, user_email = @user_email, user_password = @user_password, " +
                              "first_name = @first_name, last_name = @last_name, date_of_birth = @date_of_birth, user_address = @user_address, " +
-                             "user_phone = @user_phone, is_verified = @is_verified, user_updated_at = GETDATE() " +
+                             "user_phone = @user_phone, is_verified = @is_verified, user_updated_at = GETDATE(), user_role = @user_role " +
                              "WHERE user_id = @user_id";
 
                 try
