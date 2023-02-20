@@ -22,4 +22,6 @@ namespace WizzyLiConsoleApp
         public DateTime? user_updated_at { get; set; }
         public int user_role { get; set; }
     }
+
+
 }

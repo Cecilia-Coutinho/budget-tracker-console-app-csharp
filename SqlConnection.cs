@@ -19,15 +19,15 @@ namespace WizzyLiConsoleApp
 
         // ###### Here starts CRUD operations ( Create, Read-retrieve, Update, and Delete) ######
 
-
         // Create user
         public static void CreateNewUser(UserData user)
         {
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
+                user.user_password = UserAuthenticator.GetHashPassword(user);
                 string sql = "INSERT INTO budget_users (username, user_email, user_password, first_name, last_name, date_of_birth, user_address, user_phone, is_verified, user_role) " +
-                                "VALUES (@username, @user_email, @user_password, @first_name, @last_name, @date_of_birth, @user_address, @user_phone, @is_verified, @user_role)";
+            "VALUES (@username, @user_email, @user_password, @first_name, @last_name, @date_of_birth, @user_address, @user_phone, @is_verified, @user_role)";
                 try
                 {
 
@@ -37,6 +37,7 @@ namespace WizzyLiConsoleApp
                 {
                     throw new Exception("Ops! Something happened... Error creating user", ex);
                 }
+
             }
         }
 
@@ -85,18 +86,45 @@ namespace WizzyLiConsoleApp
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
-                string sql = "UPDATE budget_users SET username = @username, user_email = @user_email, user_password = @user_password, " +
-                             "first_name = @first_name, last_name = @last_name, date_of_birth = @date_of_birth, user_address = @user_address, " +
-                             "user_phone = @user_phone, is_verified = @is_verified, user_updated_at = GETDATE(), user_role = @user_role " +
+                user.user_password = UserAuthenticator.GetHashPassword(user);
+                string sql = "UPDATE budget_users SET " +
+                             "username = @username, " +
+                             "user_email = @user_email, " +
+                             "user_password = @user_password, " +
+                             "first_name = @first_name, " +
+                             "last_name = @last_name, " +
+                             "date_of_birth = @date_of_birth, " +
+                             "user_address = @user_address, " +
+                             "user_phone = @user_phone, " +
+                             "user_updated_at = now()" +
                              "WHERE user_id = @user_id";
+
+                // Use parameterized queries to prevent SQL injection attacks
+                //var userParameters = new
+                //{
+                //    username = user.username,
+                //    user_email = user.user_email,
+                //    user_password = user.user_password,
+                //    first_name = user.first_name,
+                //    last_name = user.last_name,
+                //    date_of_birth = user.date_of_birth,
+                //    user_address = user.user_address,
+                //    user_phone = user.user_phone,
+                //    user_role = user.user_role,
+                //    user_id = user.user_id
+                //};
 
                 try
                 {
                     connection.Execute(sql, user);
                 }
-                catch (Exception ex)
+                catch (NpgsqlException ex)
                 {
                     throw new Exception("Ops! Something happened... Error updating user", ex);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Ops! Something happened...", ex);
                 }
             }
         }
