@@ -21,7 +21,7 @@ namespace WizzyLiConsoleApp
                     Console.WriteLine($"Retrieved {users.Count} users:");
                     foreach (var user in users)
                     {
-                        Console.WriteLine($"User ID: {user.user_id}, Username: {user.username}, Email: {user.user_email}, First Name: {user.first_name}, Last Name: {user.last_name}");
+                        Console.WriteLine($"User ID: {user.id}, Username: {user.username}, Email: {user.email}, First Name: {user.first_name}, Last Name: {user.last_name}");
                     }
                 }
                 else
@@ -39,40 +39,47 @@ namespace WizzyLiConsoleApp
         {
             UserData user = new UserData()
             {
-                username = "tobiastester",
-                user_email = "tobias@tester.com",
+                username = "nachotester",
+                email = "nacho@tester.com",
                 user_password = "1234",
-                first_name = "tobias",
+                first_name = "ignacio",
                 last_name = "tester",
                 date_of_birth = new DateTime(2000, 1, 1),
-                user_address = "new hardgatan USA",
-                user_phone = "111-1234",
+                address = "new hardgatan USA",
+                phone = "444-1234",
                 is_verified = true,
-                user_role = 1
+                user_role = 3
             };
             SqlConnection.CreateNewUser(user);
-            Console.WriteLine($"User ID: {user.user_id}, Username: {user.username}, Email: {user.user_email}, First Name: {user.first_name}, Last Name: {user.last_name}");
+            Console.WriteLine($"User ID: {user.id}, Username: {user.username}, Email: {user.email}, First Name: {user.first_name}, Last Name: {user.last_name}");
         }
 
         public static void TestUpdateUser()
         {
             UserData user = new UserData()
             {
-                user_id = 3,
+                id = 3,
                 username = "pepetester",
-                user_email = "pepe@tester.com",
+                email = "pepe@tester.com",
                 user_password = "1234",
                 first_name = "pepe",
                 last_name = "tester",
                 date_of_birth = new DateTime(2000, 1, 1),
-                user_address = "new hardgatan USA",
-                user_phone = "222-1234",
+                address = "new hardgatan USA",
+                phone = "222-1234",
                 is_verified = true,
                 user_role = 3
             };
             SqlConnection.UpdateUser(user);
-            Console.WriteLine($"User ID: {user.user_id}, Username: {user.username}, Email: {user.user_email}, First Name: {user.first_name}, Last Name: {user.last_name}");
+            Console.WriteLine($"User ID: {user.id}, Username: {user.username}, Email: {user.email}, First Name: {user.first_name}, Last Name: {user.last_name}");
             //acomen
+        }
+
+        public static void TestGetUserById()
+        {
+            UserData user = SqlConnection.GetUserById(1);
+
+            Console.WriteLine($"User ID: {user.id}, Username: {user.username}, Email: {user.email}, First Name: {user.first_name}, Last Name: {user.last_name}");
         }
 
         //

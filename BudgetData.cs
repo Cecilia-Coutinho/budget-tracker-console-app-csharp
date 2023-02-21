@@ -8,14 +8,14 @@ namespace WizzyLiConsoleApp
 {
     internal class BudgetData
     {
-        public int budget_id { get; set; }
+        public int id { get; set; }
         public int project_id { get; set; }
         public int category_id { get; set; }
         public string? budget_name { get; set; }
-        public decimal budget_amount { get; set; }
-        public DateTime? budget_period_start { get; set; }
-        public DateTime? budget_period_end { get; set; }
-        public DateTime? budget_created_at { get; set; }
-        public DateTime? budget_updated_at { get; set; }
+        public decimal amount { get; set; }
+        public DateTime? period_start { get; set; }
+        public DateTime? period_end { get; set; }
+        public DateTime? created_at { get; set; }
+        public DateTime? updated_at { get; set; }
     }
 }

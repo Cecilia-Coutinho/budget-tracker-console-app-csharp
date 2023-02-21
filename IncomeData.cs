@@ -8,15 +8,15 @@ namespace WizzyLiConsoleApp
 {
     internal class IncomeData
     {
-        public int income_id { get; set; }
+        public int id { get; set; }
         public int project_id { get; set; }
         public int budget_id { get; set; }
         public string? income_name { get; set; }
-        public string? income_description { get; set; }
-        public decimal income_amount { get; set; }
-        public DateTime? income_period_start { get; set; }
-        public DateTime? income_period_end { get; set; }
-        public DateTime? income_created_at { get; set; }
-        public DateTime? income_updated_at { get; set; }
+        public string? description { get; set; }
+        public decimal amount { get; set; }
+        public DateTime? period_start { get; set; }
+        public DateTime? period_end { get; set; }
+        public DateTime? created_at { get; set; }
+        public DateTime? updated_at { get; set; }
     }
 }

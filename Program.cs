@@ -11,6 +11,7 @@ namespace WizzyLiConsoleApp
             //Helper.TestGetAllUsers();
             WelcomeMessageScreen();
             //Helper.TestCreatingNewUser();
+            //Helper.TestGetUserById();
         }
 
         //Welcome to the Application!

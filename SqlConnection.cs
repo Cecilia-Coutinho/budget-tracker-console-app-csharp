@@ -26,8 +26,8 @@ namespace WizzyLiConsoleApp
             {
                 connection.Open();
                 user.user_password = UserAuthenticator.GetHashPassword(user);
-                string sql = "INSERT INTO budget_users (username, user_email, user_password, first_name, last_name, date_of_birth, user_address, user_phone, is_verified, user_role) " +
-            "VALUES (@username, @user_email, @user_password, @first_name, @last_name, @date_of_birth, @user_address, @user_phone, @is_verified, @user_role)";
+                string sql = "INSERT INTO user_account (username, email, user_password, first_name, last_name, date_of_birth, address, phone, is_verified, user_role) " +
+            "VALUES (@username, @email, @user_password, @first_name, @last_name, @date_of_birth, @address, @phone, @is_verified, @user_role)";
                 try
                 {
 
@@ -47,11 +47,11 @@ namespace WizzyLiConsoleApp
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
-                string sql = "SELECT * FROM budget_users WHERE user_id = @user_id";
+                string sql = "SELECT * FROM user_account WHERE id = @id";
 
                 try
                 {
-                    return connection.QuerySingleOrDefault<UserData>(sql, new { user_id = userId });
+                    return connection.QuerySingleOrDefault<UserData>(sql, new { id = userId });
                 }
                 catch (Exception ex)
                 {
@@ -66,7 +66,7 @@ namespace WizzyLiConsoleApp
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
-                string sql = "SELECT * FROM budget_users";
+                string sql = "SELECT * FROM user_account";
 
                 try
                 {
@@ -87,17 +87,17 @@ namespace WizzyLiConsoleApp
             {
                 connection.Open();
                 user.user_password = UserAuthenticator.GetHashPassword(user);
-                string sql = "UPDATE budget_users SET " +
+                string sql = "UPDATE user_account SET " +
                              "username = @username, " +
-                             "user_email = @user_email, " +
+                             "email = @email, " +
                              "user_password = @user_password, " +
                              "first_name = @first_name, " +
                              "last_name = @last_name, " +
                              "date_of_birth = @date_of_birth, " +
-                             "user_address = @user_address, " +
-                             "user_phone = @user_phone, " +
-                             "user_updated_at = now()" +
-                             "WHERE user_id = @user_id";
+                             "address = @address, " +
+                             "phone = @phone, " +
+                             "updated_at = now()" +
+                             "WHERE id = @id";
 
                 // Use parameterized queries to prevent SQL injection attacks
                 //var userParameters = new
@@ -135,12 +135,12 @@ namespace WizzyLiConsoleApp
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
-                string sql = "DELETE FROM budget_users WHERE user_id = @user_id";
+                string sql = "DELETE FROM user_account WHERE id = @id";
 
                 try
                 {
                     // Execute the SQL statement with the given user ID parameter
-                    connection.Execute(sql, new { user_id = userId });
+                    connection.Execute(sql, new { id = userId });
                 }
                 catch (Exception ex)
                 {
@@ -160,8 +160,8 @@ namespace WizzyLiConsoleApp
                 {
                     try
                     {
-                        string sql = "INSERT INTO budget_projects (user_id, project_name, project_description, project_start_date, project_end_date) " +
-                                     "VALUES (@user_id, @project_name, @project_description, @project_start_date, @project_end_date)";
+                        string sql = "INSERT INTO project (user_id, project_name, description, start_date, end_date) " +
+                                     "VALUES (@user_id, @project_name, @description, @start_date, @end_date)";
 
                         connection.Execute(sql, project, transaction: transaction);
                         transaction.Commit();
@@ -181,11 +181,11 @@ namespace WizzyLiConsoleApp
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
-                string sql = "SELECT * FROM budget_projects WHERE project_id = @project_id";
+                string sql = "SELECT * FROM project WHERE id = @id";
 
                 try
                 {
-                    return connection.QuerySingleOrDefault<ProjectData>(sql, new { project_id = projectId });
+                    return connection.QuerySingleOrDefault<ProjectData>(sql, new { id = projectId });
                 }
                 catch (Exception ex)
                 {
@@ -204,9 +204,9 @@ namespace WizzyLiConsoleApp
                 {
                     try
                     {
-                        string sql = "UPDATE budget_projects SET project_name = @project_name, project_description = @project_description, " +
-                                     "project_start_date = @project_start_date, project_end_date = @project_end_date, project_updated_at = GETDATE() " +
-                                     "WHERE project_id = @project_id";
+                        string sql = "UPDATE project SET project_name = @project_name, description = @description, " +
+                                     "start_date = @start_date, end_date = @end_date, updated_at = now() " +
+                                     "WHERE id = @id";
 
                         connection.Execute(sql, project, transaction: transaction);
                         transaction.Commit();
@@ -230,9 +230,9 @@ namespace WizzyLiConsoleApp
                 {
                     try
                     {
-                        string sql = "DELETE FROM budget_projects WHERE project_id = @project_id";
+                        string sql = "DELETE FROM project WHERE id = @id";
 
-                        connection.Execute(sql, new { project_id = projectId }, transaction: transaction);
+                        connection.Execute(sql, new { id = projectId }, transaction: transaction);
                         transaction.Commit();
                     }
                     catch (Exception ex)
@@ -256,8 +256,8 @@ namespace WizzyLiConsoleApp
                 {
                     try
                     {
-                        string sql = "INSERT INTO budget_categories (category_name, category_description) " +
-                                     "VALUES (@category_name, @category_description)";
+                        string sql = "INSERT INTO category (category_name, description) " +
+                                     "VALUES (@name, @description)";
 
                         connection.Execute(sql, category, transaction: transaction);
                         transaction.Commit();
@@ -277,11 +277,11 @@ namespace WizzyLiConsoleApp
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
-                string sql = "SELECT * FROM budget_categories WHERE category_id = @category_id";
+                string sql = "SELECT * FROM category WHERE id = @id";
 
                 try
                 {
-                    return connection.QuerySingleOrDefault<CategoryData>(sql, new { category_id = categoryId });
+                    return connection.QuerySingleOrDefault<CategoryData>(sql, new { id = categoryId });
                 }
                 catch (Exception ex)
                 {
@@ -296,7 +296,7 @@ namespace WizzyLiConsoleApp
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
-                string sql = "SELECT * FROM budget_categories WHERE category_name = @category_name";
+                string sql = "SELECT * FROM category WHERE category_name = @category_name";
 
                 try
                 {
@@ -319,9 +319,9 @@ namespace WizzyLiConsoleApp
                 {
                     try
                     {
-                        string sql = "UPDATE budget_categories SET category_name = @category_name, category_description = @category_description, " +
-                                     "category_updated_at = GETDATE() " +
-                                     "WHERE category_id = @category_id ";
+                        string sql = "UPDATE category SET category_name = @category_name, description = @description, " +
+                                     "updated_at = now() " +
+                                     "WHERE id = @id ";
 
                         connection.Execute(sql, category, transaction: transaction);
                         transaction.Commit();
@@ -346,8 +346,8 @@ namespace WizzyLiConsoleApp
                 {
                     try
                     {
-                        string sql = "INSERT INTO budget_budgets (project_id, category_id, budget_name, budget_amount, budget_period_start, budget_period_end) " +
-                                     "VALUES (@project_id, @category_id, @budget_name, @budget_amount, @budget_period_start, @budget_period_end)";
+                        string sql = "INSERT INTO budget (project_id, category_id, budget_name, amount, period_start, period_end) " +
+                                     "VALUES (@project_id, @category_id, @budget_name, @amount, @period_start, @period_end)";
 
                         connection.Execute(sql, budget, transaction: transaction);
                         transaction.Commit();
@@ -367,11 +367,11 @@ namespace WizzyLiConsoleApp
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
-                string sql = "SELECT * FROM budget_budgets WHERE budget_id = @budget_id";
+                string sql = "SELECT * FROM budget WHERE id = @id";
 
                 try
                 {
-                    return connection.QuerySingleOrDefault<BudgetData>(sql, new { budget_id = budgetId });
+                    return connection.QuerySingleOrDefault<BudgetData>(sql, new { id = budgetId });
                 }
                 catch (Exception ex)
                 {
@@ -390,9 +390,9 @@ namespace WizzyLiConsoleApp
                 {
                     try
                     {
-                        string sql = "UPDATE budget_budgets SET budget_name = @budget_name, budget_amount = @budget_amount, " +
-                                     "budget_period_start = @budget_period_start, budget_period_end = @budget_period_end, budget_updated_at = GETDATE() " +
-                                     "WHERE budget_id = @budget_id";
+                        string sql = "UPDATE budget SET budget_name = @budget_name, amount = @amount, " +
+                                     "period_start = @period_start, period_end = @period_end, updated_at = now() " +
+                                     "WHERE id = @id";
 
                         connection.Execute(sql, budget, transaction: transaction);
                         transaction.Commit();
@@ -416,9 +416,9 @@ namespace WizzyLiConsoleApp
                 {
                     try
                     {
-                        string sql = "DELETE FROM budget_budgets WHERE budget_id = @budget_id";
+                        string sql = "DELETE FROM budget WHERE id = @id";
 
-                        connection.Execute(sql, new { budget_id = budgetId }, transaction: transaction);
+                        connection.Execute(sql, new { id = budgetId }, transaction: transaction);
                         transaction.Commit();
                     }
                     catch (Exception ex)
@@ -440,8 +440,8 @@ namespace WizzyLiConsoleApp
                 {
                     try
                     {
-                        string sql = "INSERT INTO budget_expenses (project_id, budget_id, expense_name, expense_description, expense_amount, expense_period_start, expense_period_end) " +
-                                     "VALUES (@project_id, @budget_id, @expense_name, @expense_description, @expense_amount, @expense_period_start, @expense_period_end)";
+                        string sql = "INSERT INTO expense (project_id, budget_id, expense_name, description, amount, period_start, period_end) " +
+                                     "VALUES (@project_id, @budget_id, @expense_name, @description, @amount, @period_start, @period_end)";
 
                         connection.Execute(sql, expense, transaction: transaction);
                         transaction.Commit();
@@ -461,11 +461,11 @@ namespace WizzyLiConsoleApp
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
-                string sql = "SELECT * FROM budget_expenses WHERE expense_id = @expense_id";
+                string sql = "SELECT * FROM expense WHERE id = @id";
 
                 try
                 {
-                    return connection.QuerySingleOrDefault<ExpenseData>(sql, new { expense_id = expenseId });
+                    return connection.QuerySingleOrDefault<ExpenseData>(sql, new { id = expenseId });
                 }
                 catch (Exception ex)
                 {
@@ -484,9 +484,9 @@ namespace WizzyLiConsoleApp
                 {
                     try
                     {
-                        string sql = "UPDATE budget_expenses SET expense_name = @expense_name, expense_description = @expense_description, expense_amount = @expense_amount, " +
-                                     "expense_period_start = @expense_period_start, expense_period_end = @expense_period_end, expense_updated_at = GETDATE() " +
-                                     "WHERE expense_id = @expense_id";
+                        string sql = "UPDATE expense SET expense_name = @expense_name, description = @description, amount = @amount, " +
+                                     "period_start = @period_start, period_end = @period_end, updated_at = now() " +
+                                     "WHERE id = @id";
 
                         connection.Execute(sql, expense, transaction: transaction);
                         transaction.Commit();
@@ -510,9 +510,9 @@ namespace WizzyLiConsoleApp
                 {
                     try
                     {
-                        string sql = "DELETE FROM budget_expenses WHERE expense_id = @expense_id";
+                        string sql = "DELETE FROM expense WHERE id = @id";
 
-                        connection.Execute(sql, new { expense_id = expenseId }, transaction: transaction);
+                        connection.Execute(sql, new { id = expenseId }, transaction: transaction);
                         transaction.Commit();
                     }
                     catch (Exception ex)
@@ -535,8 +535,8 @@ namespace WizzyLiConsoleApp
                 {
                     try
                     {
-                        string sql = "INSERT INTO budget_incomes (project_id, budget_id, income_name, income_description, income_amount, income_period_start, income_period_end) " +
-                                     "VALUES (@project_id, @budget_id, @income_name, @income_description, @income_amount, @income_period_start, @income_period_end)";
+                        string sql = "INSERT INTO income (project_id, budget_id, income_name, description, amount, period_start, period_end) " +
+                                     "VALUES (@project_id, @budget_id, @income_name, @description, @amount, @period_start, @period_end)";
 
                         connection.Execute(sql, income, transaction: transaction);
                         transaction.Commit();
@@ -556,11 +556,11 @@ namespace WizzyLiConsoleApp
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
-                string sql = "SELECT * FROM budget_incomes WHERE income_id = @income_id";
+                string sql = "SELECT * FROM income WHERE id = @id";
 
                 try
                 {
-                    return connection.QuerySingleOrDefault<IncomeData>(sql, new { income_id = incomeId });
+                    return connection.QuerySingleOrDefault<IncomeData>(sql, new { id = incomeId });
                 }
                 catch (Exception ex)
                 {
@@ -579,9 +579,9 @@ namespace WizzyLiConsoleApp
                 {
                     try
                     {
-                        string sql = "UPDATE budget_incomes SET income_name = @income_name, income_description = @income_description, income_amount = @income_amount, " +
-                                     "income_period_start = @income_period_start, income_period_end = @income_period_end, income_updated_at = GETDATE() " +
-                                     "WHERE income_id = @income_id";
+                        string sql = "UPDATE income SET income_name = @income_name, description = @description, amount = @amount, " +
+                                     "period_start = @period_start, period_end = @period_end, updated_at = now() " +
+                                     "WHERE id = @id";
 
                         connection.Execute(sql, income, transaction: transaction);
                         transaction.Commit();
@@ -605,9 +605,9 @@ namespace WizzyLiConsoleApp
                 {
                     try
                     {
-                        string sql = "DELETE FROM budget_incomes WHERE income_id = @income_id";
+                        string sql = "DELETE FROM income WHERE id = @id";
 
-                        connection.Execute(sql, new { income_id = incomeId }, transaction: transaction);
+                        connection.Execute(sql, new { id = incomeId }, transaction: transaction);
                         transaction.Commit();
                     }
                     catch (Exception ex)
