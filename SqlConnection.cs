@@ -24,20 +24,20 @@ namespace WizzyLiConsoleApp
         {
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
-                connection.Open();
-                user.user_password = UserAuthenticator.GetHashPassword(user);
-                string sql = "INSERT INTO user_account (username, email, user_password, first_name, last_name, date_of_birth, address, phone, is_verified, user_role) " +
-            "VALUES (@username, @email, @user_password, @first_name, @last_name, @date_of_birth, @address, @phone, @is_verified, @user_role)";
                 try
                 {
+                    connection.Open();
+                    user.user_password = UserAuthenticator.GetHashPassword(user);
+                    string sql = "INSERT INTO user_account (username, email, user_password, first_name, last_name, date_of_birth, address, phone, is_verified, user_role) " +
+                "VALUES (@username, @email, @user_password, @first_name, @last_name, @date_of_birth, @address, @phone, @is_verified, @user_role)";
 
-                    connection.Execute(sql, user);
+                    var parameters = new DynamicParameters(user); // Use parameterized queries to prevent SQL injection attacks
+                    connection.Execute(sql, parameters);
                 }
                 catch (Exception ex)
                 {
                     throw new Exception("Ops! Something happened... Error creating user", ex);
                 }
-
             }
         }
 
@@ -46,11 +46,10 @@ namespace WizzyLiConsoleApp
         {
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
-                connection.Open();
-                string sql = "SELECT * FROM user_account WHERE id = @id";
-
                 try
                 {
+                    connection.Open();
+                    string sql = "SELECT * FROM user_account WHERE id = @id";
                     return connection.QuerySingleOrDefault<UserData>(sql, new { id = userId });
                 }
                 catch (Exception ex)
@@ -65,11 +64,10 @@ namespace WizzyLiConsoleApp
         {
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
-                connection.Open();
-                string sql = "SELECT * FROM user_account";
-
                 try
                 {
+                    connection.Open();
+                    string sql = "SELECT * FROM user_account";
                     return connection.Query<UserData>(sql).ToList();
                 }
                 catch (Exception ex)
@@ -85,38 +83,25 @@ namespace WizzyLiConsoleApp
         {
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
-                connection.Open();
-                user.user_password = UserAuthenticator.GetHashPassword(user);
-                string sql = "UPDATE user_account SET " +
-                             "username = @username, " +
-                             "email = @email, " +
-                             "user_password = @user_password, " +
-                             "first_name = @first_name, " +
-                             "last_name = @last_name, " +
-                             "date_of_birth = @date_of_birth, " +
-                             "address = @address, " +
-                             "phone = @phone, " +
-                             "updated_at = now()" +
-                             "WHERE id = @id";
-
-                // Use parameterized queries to prevent SQL injection attacks
-                //var userParameters = new
-                //{
-                //    username = user.username,
-                //    user_email = user.user_email,
-                //    user_password = user.user_password,
-                //    first_name = user.first_name,
-                //    last_name = user.last_name,
-                //    date_of_birth = user.date_of_birth,
-                //    user_address = user.user_address,
-                //    user_phone = user.user_phone,
-                //    user_role = user.user_role,
-                //    user_id = user.user_id
-                //};
-
                 try
                 {
-                    connection.Execute(sql, user);
+                    connection.Open();
+                    user.user_password = UserAuthenticator.GetHashPassword(user);
+                    string sql = "UPDATE user_account SET " +
+                                 "username = @username, " +
+                                 "email = @email, " +
+                                 "user_password = @user_password, " +
+                                 "first_name = @first_name, " +
+                                 "last_name = @last_name, " +
+                                 "date_of_birth = @date_of_birth, " +
+                                 "address = @address, " +
+                                 "phone = @phone, " +
+                                 "updated_at = now()" +
+                                 "WHERE id = @id";
+
+                    // Use parameterized queries to prevent SQL injection attacks
+                    var parameters = new DynamicParameters(user);
+                    connection.Execute(sql, parameters);
                 }
                 catch (NpgsqlException ex)
                 {
@@ -134,13 +119,11 @@ namespace WizzyLiConsoleApp
         {
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
-                connection.Open();
-                string sql = "DELETE FROM user_account WHERE id = @id";
-
                 try
                 {
-                    // Execute the SQL statement with the given user ID parameter
-                    connection.Execute(sql, new { id = userId });
+                    connection.Open();
+                    string sql = "DELETE FROM user_account WHERE id = @id";
+                    connection.Execute(sql, new { id = userId }); // Execute the SQL statement with the given user ID parameter
                 }
                 catch (Exception ex)
                 {
@@ -163,7 +146,9 @@ namespace WizzyLiConsoleApp
                         string sql = "INSERT INTO project (user_id, project_name, description, start_date, end_date) " +
                                      "VALUES (@user_id, @project_name, @description, @start_date, @end_date)";
 
-                        connection.Execute(sql, project, transaction: transaction);
+
+                        var parameters = new DynamicParameters(project); // Use parameterized queries to prevent SQL injection attacks
+                        connection.Execute(sql, parameters, transaction: transaction);
                         transaction.Commit();
                     }
                     catch (Exception ex)
@@ -180,11 +165,10 @@ namespace WizzyLiConsoleApp
         {
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
-                connection.Open();
-                string sql = "SELECT * FROM project WHERE id = @id";
-
                 try
                 {
+                    connection.Open();
+                    string sql = "SELECT * FROM project WHERE id = @id";
                     return connection.QuerySingleOrDefault<ProjectData>(sql, new { id = projectId });
                 }
                 catch (Exception ex)
@@ -208,7 +192,8 @@ namespace WizzyLiConsoleApp
                                      "start_date = @start_date, end_date = @end_date, updated_at = now() " +
                                      "WHERE id = @id";
 
-                        connection.Execute(sql, project, transaction: transaction);
+                        var parameters = new DynamicParameters(project); // Use parameterized queries to prevent SQL injection attacks
+                        connection.Execute(sql, parameters, transaction: transaction);
                         transaction.Commit();
                     }
                     catch (Exception ex)
@@ -231,7 +216,6 @@ namespace WizzyLiConsoleApp
                     try
                     {
                         string sql = "DELETE FROM project WHERE id = @id";
-
                         connection.Execute(sql, new { id = projectId }, transaction: transaction);
                         transaction.Commit();
                     }
@@ -259,7 +243,8 @@ namespace WizzyLiConsoleApp
                         string sql = "INSERT INTO category (category_name, description) " +
                                      "VALUES (@name, @description)";
 
-                        connection.Execute(sql, category, transaction: transaction);
+                        var parameters = new DynamicParameters(category); // Use parameterized queries to prevent SQL injection attacks
+                        connection.Execute(sql, parameters, transaction: transaction);
                         transaction.Commit();
                     }
                     catch (Exception ex)
@@ -276,11 +261,10 @@ namespace WizzyLiConsoleApp
         {
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
-                connection.Open();
-                string sql = "SELECT * FROM category WHERE id = @id";
-
                 try
                 {
+                    connection.Open();
+                    string sql = "SELECT * FROM category WHERE id = @id";
                     return connection.QuerySingleOrDefault<CategoryData>(sql, new { id = categoryId });
                 }
                 catch (Exception ex)
@@ -295,11 +279,10 @@ namespace WizzyLiConsoleApp
         {
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
-                connection.Open();
-                string sql = "SELECT * FROM category WHERE category_name = @category_name";
-
                 try
                 {
+                    connection.Open();
+                    string sql = "SELECT * FROM category WHERE category_name = @category_name";
                     return connection.QuerySingleOrDefault<CategoryData>(sql, new { category_name = categoryName });
                 }
                 catch (Exception ex)
@@ -323,7 +306,8 @@ namespace WizzyLiConsoleApp
                                      "updated_at = now() " +
                                      "WHERE id = @id ";
 
-                        connection.Execute(sql, category, transaction: transaction);
+                        var parameters = new DynamicParameters(category); // Use parameterized queries to prevent SQL injection attacks
+                        connection.Execute(sql, parameters, transaction: transaction);
                         transaction.Commit();
                     }
                     catch (Exception ex)
@@ -347,9 +331,10 @@ namespace WizzyLiConsoleApp
                     try
                     {
                         string sql = "INSERT INTO budget (project_id, category_id, budget_name, amount, period_start, period_end) " +
-                                     "VALUES (@project_id, @category_id, @budget_name, @amount, @period_start, @period_end)";
+                                     "VALUES (@project_id, @category_id, @budget_name, @amount, @period_start, @period_end) ";
 
-                        connection.Execute(sql, budget, transaction: transaction);
+                        var parameters = new DynamicParameters(budget); // Use parameterized queries to prevent SQL injection attacks
+                        connection.Execute(sql, parameters, transaction: transaction);
                         transaction.Commit();
                     }
                     catch (Exception ex)
@@ -366,11 +351,10 @@ namespace WizzyLiConsoleApp
         {
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
-                connection.Open();
-                string sql = "SELECT * FROM budget WHERE id = @id";
-
                 try
                 {
+                    connection.Open();
+                    string sql = "SELECT * FROM budget WHERE id = @id";
                     return connection.QuerySingleOrDefault<BudgetData>(sql, new { id = budgetId });
                 }
                 catch (Exception ex)
@@ -394,7 +378,8 @@ namespace WizzyLiConsoleApp
                                      "period_start = @period_start, period_end = @period_end, updated_at = now() " +
                                      "WHERE id = @id";
 
-                        connection.Execute(sql, budget, transaction: transaction);
+                        var parameters = new DynamicParameters(budget); // Use parameterized queries to prevent SQL injection attacks
+                        connection.Execute(sql, parameters, transaction: transaction);
                         transaction.Commit();
                     }
                     catch (Exception ex)
@@ -417,7 +402,6 @@ namespace WizzyLiConsoleApp
                     try
                     {
                         string sql = "DELETE FROM budget WHERE id = @id";
-
                         connection.Execute(sql, new { id = budgetId }, transaction: transaction);
                         transaction.Commit();
                     }
@@ -443,7 +427,8 @@ namespace WizzyLiConsoleApp
                         string sql = "INSERT INTO expense (project_id, budget_id, expense_name, description, amount, period_start, period_end) " +
                                      "VALUES (@project_id, @budget_id, @expense_name, @description, @amount, @period_start, @period_end)";
 
-                        connection.Execute(sql, expense, transaction: transaction);
+                        var parameters = new DynamicParameters(expense); // Use parameterized queries to prevent SQL injection attacks
+                        connection.Execute(sql, parameters, transaction: transaction);
                         transaction.Commit();
                     }
                     catch (Exception ex)
@@ -460,11 +445,10 @@ namespace WizzyLiConsoleApp
         {
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
-                connection.Open();
-                string sql = "SELECT * FROM expense WHERE id = @id";
-
                 try
                 {
+                    connection.Open();
+                    string sql = "SELECT * FROM expense WHERE id = @id";
                     return connection.QuerySingleOrDefault<ExpenseData>(sql, new { id = expenseId });
                 }
                 catch (Exception ex)
@@ -488,7 +472,8 @@ namespace WizzyLiConsoleApp
                                      "period_start = @period_start, period_end = @period_end, updated_at = now() " +
                                      "WHERE id = @id";
 
-                        connection.Execute(sql, expense, transaction: transaction);
+                        var parameters = new DynamicParameters(expense); // Use parameterized queries to prevent SQL injection attacks
+                        connection.Execute(sql, parameters, transaction: transaction);
                         transaction.Commit();
                     }
                     catch (Exception ex)
@@ -511,7 +496,6 @@ namespace WizzyLiConsoleApp
                     try
                     {
                         string sql = "DELETE FROM expense WHERE id = @id";
-
                         connection.Execute(sql, new { id = expenseId }, transaction: transaction);
                         transaction.Commit();
                     }
@@ -538,7 +522,8 @@ namespace WizzyLiConsoleApp
                         string sql = "INSERT INTO income (project_id, budget_id, income_name, description, amount, period_start, period_end) " +
                                      "VALUES (@project_id, @budget_id, @income_name, @description, @amount, @period_start, @period_end)";
 
-                        connection.Execute(sql, income, transaction: transaction);
+                        var parameters = new DynamicParameters(income); // Use parameterized queries to prevent SQL injection attacks
+                        connection.Execute(sql, parameters, transaction: transaction);
                         transaction.Commit();
                     }
                     catch (Exception ex)
@@ -555,11 +540,10 @@ namespace WizzyLiConsoleApp
         {
             using (IDbConnection connection = new NpgsqlConnection(connectionString))
             {
-                connection.Open();
-                string sql = "SELECT * FROM income WHERE id = @id";
-
                 try
                 {
+                    connection.Open();
+                    string sql = "SELECT * FROM income WHERE id = @id";
                     return connection.QuerySingleOrDefault<IncomeData>(sql, new { id = incomeId });
                 }
                 catch (Exception ex)
@@ -583,7 +567,8 @@ namespace WizzyLiConsoleApp
                                      "period_start = @period_start, period_end = @period_end, updated_at = now() " +
                                      "WHERE id = @id";
 
-                        connection.Execute(sql, income, transaction: transaction);
+                        var parameters = new DynamicParameters(income); // Use parameterized queries to prevent SQL injection attacks
+                        connection.Execute(sql, parameters, transaction: transaction);
                         transaction.Commit();
                     }
                     catch (Exception ex)
@@ -606,7 +591,6 @@ namespace WizzyLiConsoleApp
                     try
                     {
                         string sql = "DELETE FROM income WHERE id = @id";
-
                         connection.Execute(sql, new { id = incomeId }, transaction: transaction);
                         transaction.Commit();
                     }
@@ -618,6 +602,5 @@ namespace WizzyLiConsoleApp
                 }
             }
         }
-
     }
 }
