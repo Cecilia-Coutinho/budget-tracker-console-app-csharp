@@ -14,7 +14,7 @@ namespace WizzyLiConsoleApp
         //(TODO: define menu for REGular User Type, admin and manager)
         //TODO: SUBMENU SYSTEM
         //TODO: MENU METHODS
-        //TODO
+        //TODO: a test
         static void Main(string[] args)
         {
             //Helper.TestGetAllUsers();
