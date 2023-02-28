@@ -21,15 +21,10 @@ The MVP (Minimum Viable Product) is to build a basic budget planner that support
 <ul>
 <li>Basic user interface and data visualization</li>
 <li>User registration and login</li>
-<li>Integration with a third-party authentication service (if necessary)</li>
 <li>Income and expense tracking</li>
 <li>Budget creation and management</li>
 <li>Dashboard showing a summary of the user's finances and budget progress</li>
 </ul>
-
-<p align = center>
-The MVP should be a functional product that can be used by the target audience (project managers) to track and manage their budgets effectively. Additional features and functionalities can be added in later stages of development.
-</p>
 
 <h2>🎯 Features:</h2>
 <p ><img align="center" width="500" src="./.github/first_level.svg#gh-dark-mode-only"/></p>
@@ -38,12 +33,9 @@ The MVP should be a functional product that can be used by the target audience (
 <li>Dashboard displaying budget summary</li>
 <li>Ability to create, edit, and delete budgets</li>
 <li>Ability to switch between different budgeting methodologies</li>
-<li>Budget templates for commonly used categories</li>
 <li>Income tracking and management</li>
 <li>Expense tracking and management</li>
-<li>Ability to attach receipts or other documentation to expenses</li>
 <li>Reporting and analysis tools</li>
-<li>Integration with third-party accounting software (free open-source)</li>
 <li>Scalable and extensible data structure</li>
 </ul>
 
@@ -54,9 +46,7 @@ The MVP should be a functional product that can be used by the target audience (
 <li>.NET 6.0</li>
 <li>Dapper ORM</li>
 <li>PostgreSQL</li>
-<li>ASP.NET Core</li>
-<li>HTML/CSS/JavaScript</li>
-<li>Bootstrap</li>
+<li>DbGate</li>
 </ul>
 
 <p><img align="center" width="500" src="./.github/second_level.svg#gh-dark-mode-only"/></p>
@@ -68,10 +58,6 @@ The MVP should be a functional product that can be used by the target audience (
 </ul>
 
 <h3>📝 Reflections or aditional Info</h3>
-
-<h3></h3>
-
-<h3>📌Misc</h3>
-
-<h3>🔗Links</h3>
-# budget-tracker-console-app
+<p align = center>
+The MVP should be a functional product that can be used by the target audience (project managers) to track and manage their budgets effectively. Additional features and functionalities can be added in later stages of development.
+</p>
