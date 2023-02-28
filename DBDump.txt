@@ -39,6 +39,47 @@ CREATE TABLE "public"."budget" (
   "amount" NUMERIC NOT NULL,
   "period_start" DATE NULL,
   "period_end" DATE NULL,
+ALTER TABLE "public"."project" DROP CONSTRAINT "budget_projects_user_id_fkey";
+ALTER TABLE "public"."income" DROP CONSTRAINT "budget_income_budget_id_fkey";
+ALTER TABLE "public"."expense" DROP CONSTRAINT "budget_expenses_budget_id_fkey";
+ALTER TABLE "public"."budget" DROP CONSTRAINT "budget_budgets_project_id_fkey";
+ALTER TABLE "public"."income" DROP CONSTRAINT "budget_income_project_id_fkey";
+ALTER TABLE "public"."expense" DROP CONSTRAINT "budget_expenses_project_id_fkey";
+ALTER TABLE "public"."budget" DROP CONSTRAINT "budget_budgets_budget_type_id_fkey";
+ALTER TABLE "public"."user_account" DROP CONSTRAINT "budget_roles_id_fkey";
+DROP TABLE IF EXISTS "public"."user_account";
+DROP TABLE IF EXISTS "public"."budget";
+DROP TABLE IF EXISTS "public"."project";
+DROP TABLE IF EXISTS "public"."income";
+DROP TABLE IF EXISTS "public"."expense";
+DROP TABLE IF EXISTS "public"."category";
+DROP TABLE IF EXISTS "public"."user_role";
+CREATE TABLE "public"."user_account" ( 
+  "id" SERIAL,
+  "username" VARCHAR(30) NOT NULL,
+  "email" VARCHAR(100) NOT NULL,
+  "user_password" VARCHAR(70) NOT NULL,
+  "first_name" VARCHAR(50) NOT NULL,
+  "last_name" VARCHAR(50) NOT NULL,
+  "date_of_birth" DATE NOT NULL,
+  "address" VARCHAR(200) NULL,
+  "phone" VARCHAR(10) NULL,
+  "is_verified" BOOLEAN NULL,
+  "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  "updated_at" TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ,
+  "user_role" INTEGER NULL,
+  CONSTRAINT "budget_users_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "budget_users_username_key" UNIQUE ("username"),
+  CONSTRAINT "budget_users_user_email_key" UNIQUE ("email")
+);
+CREATE TABLE "public"."budget" ( 
+  "id" SERIAL,
+  "project_id" INTEGER NULL,
+  "category_id" INTEGER NULL,
+  "budget_name" VARCHAR(100) NOT NULL,
+  "amount" NUMERIC NOT NULL,
+  "period_start" DATE NULL,
+  "period_end" DATE NULL,
   "created_at" TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ,
   "updated_at" TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ,
   CONSTRAINT "budget_budgets_pkey" PRIMARY KEY ("id")
@@ -97,6 +138,13 @@ CREATE TABLE "public"."user_role" (
   CONSTRAINT "budget_roles_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "budget_roles_role_name_key" UNIQUE ("role_name")
 );
+ALTER TABLE "public"."user_account" DISABLE TRIGGER ALL;
+ALTER TABLE "public"."budget" DISABLE TRIGGER ALL;
+ALTER TABLE "public"."project" DISABLE TRIGGER ALL;
+ALTER TABLE "public"."income" DISABLE TRIGGER ALL;
+ALTER TABLE "public"."expense" DISABLE TRIGGER ALL;
+ALTER TABLE "public"."category" DISABLE TRIGGER ALL;
+ALTER TABLE "public"."user_role" DISABLE TRIGGER ALL;
 INSERT INTO "public"."user_account" ("username", "email", "user_password", "first_name", "last_name", "date_of_birth", "address", "phone", "is_verified", "created_at", "updated_at", "user_role") VALUES ('tobiastester', 'tobias@tester.com', 'nIKTe/miH5s6Pv5+S6qUgN7WmH9WL8Ihw3F1td9nHCc=', 'tobias', 'tester', '2000-01-01', 'new hardgatan USA', '111-1234', true, '2023-02-20 18:42:29.327639', '2023-02-20 18:42:29.327639', 1);
 INSERT INTO "public"."user_account" ("username", "email", "user_password", "first_name", "last_name", "date_of_birth", "address", "phone", "is_verified", "created_at", "updated_at", "user_role") VALUES ('mariatester', 'maria@tester.com', 'NUJB5YVgksZgf2QcjtVp9zxu+SMHugK9aNZ5Jp6Zl10=', 'maria', 'tester', '2000-01-01', 'new hardgatan USA', '555-1234', true, '2023-02-18 17:56:36.799479', '2023-02-20 19:07:04.712055', 1);
 INSERT INTO "public"."user_account" ("username", "email", "user_password", "first_name", "last_name", "date_of_birth", "address", "phone", "is_verified", "created_at", "updated_at", "user_role") VALUES ('pedrotester', 'pedro@tester.com', 'iPHHZIME7bTNexA5oqqtsIhaCygLFEw2twztkLgwFVw=', 'pedro', 'tester', '2000-01-01', 'new hardgatan USA', '333-1234', true, '2023-02-19 15:22:44.755344', '2023-02-20 19:09:08.018579', 2);
@@ -105,6 +153,13 @@ INSERT INTO "public"."user_account" ("username", "email", "user_password", "firs
 INSERT INTO "public"."user_role" ("role_name", "is_admin", "is_manager", "is_regular") VALUES ('admin', true, false, false);
 INSERT INTO "public"."user_role" ("role_name", "is_admin", "is_manager", "is_regular") VALUES ('manager', false, true, false);
 INSERT INTO "public"."user_role" ("role_name", "is_admin", "is_manager", "is_regular") VALUES ('regular', false, false, true);
+ALTER TABLE "public"."user_account" ENABLE TRIGGER ALL;
+ALTER TABLE "public"."budget" ENABLE TRIGGER ALL;
+ALTER TABLE "public"."project" ENABLE TRIGGER ALL;
+ALTER TABLE "public"."income" ENABLE TRIGGER ALL;
+ALTER TABLE "public"."expense" ENABLE TRIGGER ALL;
+ALTER TABLE "public"."category" ENABLE TRIGGER ALL;
+ALTER TABLE "public"."user_role" ENABLE TRIGGER ALL;
 ALTER TABLE "public"."user_account" ADD CONSTRAINT "budget_roles_id_fkey" FOREIGN KEY ("user_role") REFERENCES "public"."user_role" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "public"."budget" ADD CONSTRAINT "budget_budgets_budget_type_id_fkey" FOREIGN KEY ("category_id") REFERENCES "public"."category" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "public"."budget" ADD CONSTRAINT "budget_budgets_project_id_fkey" FOREIGN KEY ("project_id") REFERENCES "public"."project" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -113,3 +168,4 @@ ALTER TABLE "public"."income" ADD CONSTRAINT "budget_income_budget_id_fkey" FORE
 ALTER TABLE "public"."income" ADD CONSTRAINT "budget_income_project_id_fkey" FOREIGN KEY ("project_id") REFERENCES "public"."project" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "public"."expense" ADD CONSTRAINT "budget_expenses_budget_id_fkey" FOREIGN KEY ("budget_id") REFERENCES "public"."budget" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "public"."expense" ADD CONSTRAINT "budget_expenses_project_id_fkey" FOREIGN KEY ("project_id") REFERENCES "public"."project" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
