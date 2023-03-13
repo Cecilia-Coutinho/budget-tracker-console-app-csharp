@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WizzyLiConsoleApp
+namespace WizzyLiConsoleApp.Models
 {
     internal class Helper
     {
@@ -14,7 +14,7 @@ namespace WizzyLiConsoleApp
         {
             try
             {
-                List<UserData> users = SqlConnection.GetAllUsers();
+                List<UserData> users = Data.PostgresDataAccess.GetAllUsers();
 
                 if (users != null && users.Count > 0)
                 {
@@ -50,7 +50,7 @@ namespace WizzyLiConsoleApp
                 is_verified = true,
                 user_role = 3
             };
-            SqlConnection.CreateNewUser(user);
+            Data.PostgresDataAccess.CreateNewUser(user);
             Console.WriteLine($"User ID: {user.id}, Username: {user.username}, Email: {user.email}, First Name: {user.first_name}, Last Name: {user.last_name}");
         }
 
@@ -70,14 +70,14 @@ namespace WizzyLiConsoleApp
                 is_verified = true,
                 user_role = 3
             };
-            SqlConnection.UpdateUser(user);
+            Data.PostgresDataAccess.UpdateUser(user);
             Console.WriteLine($"User ID: {user.id}, Username: {user.username}, Email: {user.email}, First Name: {user.first_name}, Last Name: {user.last_name}");
             //acomen
         }
 
         public static void TestGetUserById()
         {
-            UserData user = SqlConnection.GetUserById(1);
+            UserData user = Data.PostgresDataAccess.GetUserById(1);
 
             Console.WriteLine($"User ID: {user.id}, Username: {user.username}, Email: {user.email}, First Name: {user.first_name}, Last Name: {user.last_name}");
         }

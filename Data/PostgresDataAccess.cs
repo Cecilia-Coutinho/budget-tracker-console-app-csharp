@@ -3,10 +3,11 @@ using Npgsql;
 using System.Configuration;
 using System.Data;
 using System.Globalization;
+using WizzyLiConsoleApp.Models;
 
-namespace WizzyLiConsoleApp
+namespace WizzyLiConsoleApp.Data
 {
-    internal class SqlConnection
+    internal class PostgresDataAccess
     {
         // variable to store the connection string
         private static string connectionString = LoadConnectionString();

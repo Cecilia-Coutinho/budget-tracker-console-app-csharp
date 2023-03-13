@@ -1,6 +1,8 @@
 ﻿using System.Numerics;
 using System;
 using static System.Console;
+using WizzyLiConsoleApp.MenuModule;
+using WizzyLiConsoleApp.Models;
 
 namespace WizzyLiConsoleApp
 {
@@ -10,23 +12,20 @@ namespace WizzyLiConsoleApp
         //TODO: LOGIN MENU
         //TODO: LOGIN SYSTEM
         //TODO: REGISTRATION SYSTEM
-        //TODO: MENU SYSTEM - SKELETON DONE
+        //TODO: MENU SYSTEM - REFACTOR MENUSYSTEM
         //(TODO: define menu for REGular User Type, admin and manager)
         //TODO: SUBMENU SYSTEM
         //TODO: MENU METHODS
         //TODO: a test
         static void Main(string[] args)
         {
-            //Helper.TestGetAllUsers();
             WelcomeMessageScreen();
-            RunMenu();
-            //Helper.TestCreatingNewUser();
-            //Helper.TestGetUserById();
+            MainMenu();
         }
 
         static void WelcomeMessageScreen()
         {
-            //Clear();
+            Clear();
             ForegroundColor = ConsoleColor.DarkCyan;
             WriteLine(@"               ,    _      ");
             WriteLine(@"              /|   | |     ");
@@ -45,31 +44,9 @@ namespace WizzyLiConsoleApp
             WriteLine("\n      Press ENTER to Start");
             ReadLine();
         }
-
-        static void PrintCenteredText(string text)
+        public static void MainBanner()
         {
-            int width = WindowWidth;
-            int padding = (width - text.Length) / 2;
-            string centeredText = text.PadLeft(padding + text.Length).PadRight(width);
-            WriteLine(centeredText);
-        }
-        static int MenuChoiceArrowsSystem(ConsoleKeyInfo keyInfo, int menuChoice, List<string> menuOptions)
-        {
-            int minMenuChoice = 1;
-            int maxMenuChoice = menuOptions.Count;
-            if (keyInfo.Key == ConsoleKey.UpArrow && menuChoice > minMenuChoice)
-            {
-                menuChoice--;
-            }
-            else if (keyInfo.Key == ConsoleKey.DownArrow && menuChoice < maxMenuChoice)
-            {
-                menuChoice++;
-            }
-            return menuChoice;
-        }
-
-        static void DisplayMenuOptions(List<string> menuOptions, int menuChoice)
-        {
+            Clear();
             ForegroundColor = ConsoleColor.DarkYellow;
             WriteLine(@"         ____________________ ");
             WriteLine(@"        |                    |");
@@ -77,132 +54,54 @@ namespace WizzyLiConsoleApp
             WriteLine(@"        | WizzyLi BUDGET APP |");
             WriteLine(@"        |____________________|");
             ResetColor();
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.WriteLine("\n\tUse arrow keys to navigate and press Enter to select.");
-            Console.WriteLine("\n\tPlease select one of the following options:\n");
-            Console.ResetColor();
-
-            int maxMenuChoice = menuOptions.Count - 1;
-            for (int i = 0; i <= maxMenuChoice; i++)
-            {
-                if (i == menuChoice - 1)
-                {
-                    ForegroundColor = ConsoleColor.DarkYellow;
-                }
-                Console.Write($"\n\t {i + 1}. {menuOptions[i]}");
-                ResetColor();
-            }
         }
-        static void RunMenu()
-        {
-            bool runMenu = true;
-            ConsoleKeyInfo keyInfo;
-            int menuChoice = 1;
-            List<string> regularMainMenu = new List<string>()
-            {
-                "Manage Users\n",
-                "Manage Projects\n",
-                "Manage Tasks\n",
-                "Manage Categories\n",
-                "Manage Expenses\n",
-                "Manage Incomes\n",
-                "Manage Budgets\n",
-                "Manage Reports\n",
-                "Exit\n"
-            };
 
-            while (runMenu)
+        static void MainMenu()
+        {
+            var menuItems = new List<MenuItem>()
             {
-                Console.Clear();
-                DisplayMenuOptions(regularMainMenu, menuChoice);
-                keyInfo = Console.ReadKey(true);
-                menuChoice = MenuChoiceArrowsSystem(keyInfo, menuChoice, regularMainMenu);
-                if (keyInfo.Key == ConsoleKey.Enter)
-                {
-                    switch (menuChoice)
-                    {
-                        case 1:
-                            //1. Manage Users
-                            Console.Clear();
-                            Console.ForegroundColor = ConsoleColor.DarkCyan;
-                            Console.WriteLine("coming soon");
-                            Console.ResetColor();
-                            GoBackMenuOptions();
-                            break;
-                        case 2:
-                            //2. Manage Projects
-                            Console.Clear();
-                            Console.ForegroundColor = ConsoleColor.DarkCyan;
-                            Console.WriteLine("coming soon");
-                            Console.ResetColor();
-                            GoBackMenuOptions();
-                            break;
-                        case 3:
-                            //3. Manage Tasks
-                            Console.Clear();
-                            Console.ForegroundColor = ConsoleColor.DarkCyan;
-                            Console.WriteLine("coming soon");
-                            Console.ResetColor();
-                            GoBackMenuOptions();
-                            break;
-                        case 4:
-                            //4. Manage Categories
-                            Console.Clear();
-                            Console.ForegroundColor = ConsoleColor.DarkCyan;
-                            Console.WriteLine("coming soon");
-                            Console.ResetColor();
-                            GoBackMenuOptions();
-                            break;
-                        case 5:
-                            //5. Manage Expenses
-                            Console.Clear();
-                            Console.ForegroundColor = ConsoleColor.DarkCyan;
-                            Console.WriteLine("coming soon");
-                            Console.ResetColor();
-                            GoBackMenuOptions();
-                            break;
-                        case 6:
-                            //6. Manage Incomes
-                            Console.Clear();
-                            Console.ForegroundColor = ConsoleColor.DarkCyan;
-                            Console.WriteLine("coming soon");
-                            Console.ResetColor();
-                            GoBackMenuOptions();
-                            break;
-                        case 7:
-                            //7. Manage Budgets
-                            Console.Clear();
-                            Console.ForegroundColor = ConsoleColor.DarkCyan;
-                            Console.WriteLine("coming soon");
-                            Console.ResetColor();
-                            GoBackMenuOptions();
-                            break;
-                        case 8:
-                            //8. Manage Reports
-                            Console.Clear();
-                            Console.ForegroundColor = ConsoleColor.DarkCyan;
-                            Console.WriteLine("coming soon");
-                            Console.ResetColor();
-                            GoBackMenuOptions();
-                            break;
-                        case 9:
-                            //0. Exit
-                            Console.Clear();
-                            Console.WriteLine("\n\tThank you for using WizzyLi. We look forward to your next visit!");
-                            Thread.Sleep(1000);
-                            Environment.Exit(0);
-                            break;
-                            //default:
-                            //    Console.Clear();
-                            //    InvalidOption();
-                            //    Console.ForegroundColor = ConsoleColor.Red;
-                            //    Console.WriteLine("\n\tTo navigate between menu options, use your arrow keys and select an option\n");
-                            //    Console.ResetColor();
-                            //    GoBackMenuOptions();
-                            //    break;
-                    }
-                }
+                new MenuItem("Manage Users", ManageUsersMenu),
+                new MenuItem("Manage Projects", null),
+                new MenuItem("Manage Tasks", null),
+                new MenuItem("Manage Categories", null),
+                new MenuItem("Manage Expenses", null),
+                new MenuItem("Manage Incomes", null),
+                new MenuItem("Manage Budgets", null),
+                new MenuItem("Manage Reports", null),
+            };
+            Menu.ManageMenu(menuItems);
+        }
+        static void ManageUsersMenu()
+        {
+            var menuItems = new List<MenuItem>();
+            var choicesManager = new List<MenuItem>();
+            var choicesAdmin = new List<MenuItem>();
+
+            menuItems.Add(new MenuItem("View Users", null));
+
+            choicesManager.Add(new MenuItem("Add User", null));
+            choicesManager.Add(new MenuItem("Edit User", null));
+
+            choicesAdmin.Add(new MenuItem("Delete User", null));
+
+            UserData currentUser = new UserData();
+            if (currentUser.user_role == (int)UserRole.Manager)
+            {
+                menuItems.AddRange(choicesManager);
             }
+
+            if (currentUser.user_role == (int)UserRole.Admin)
+            {
+                menuItems.AddRange(choicesAdmin);
+            }
+            Menu.ManageMenu(menuItems);
+        }
+
+        public enum UserRole
+        {
+            Admin = 1,
+            Manager = 2,
+            Regular = 3
         }
         static void GoBackMenuOptions()
         {

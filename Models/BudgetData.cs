@@ -4,15 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WizzyLiConsoleApp
+namespace WizzyLiConsoleApp.Models
 {
-    internal class ExpenseData
+    internal class BudgetData
     {
         public int id { get; set; }
         public int project_id { get; set; }
-        public int budget_id { get; set; }
-        public string? expense_name { get; set; }
-        public string? description { get; set; }
+        public int category_id { get; set; }
+        public string? budget_name { get; set; }
         public decimal amount { get; set; }
         public DateTime? period_start { get; set; }
         public DateTime? period_end { get; set; }

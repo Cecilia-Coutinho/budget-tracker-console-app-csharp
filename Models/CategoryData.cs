@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WizzyLiConsoleApp
+namespace WizzyLiConsoleApp.Models
 {
     internal class CategoryData
     {

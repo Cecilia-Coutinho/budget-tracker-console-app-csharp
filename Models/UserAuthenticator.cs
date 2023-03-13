@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Net.Http.Headers;
 
-namespace WizzyLiConsoleApp
+namespace WizzyLiConsoleApp.Models
 {
     internal class UserAuthenticator
     {
